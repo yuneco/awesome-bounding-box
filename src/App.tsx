@@ -1,23 +1,27 @@
 import { css } from "@kuma-ui/core";
 
 import "./App.css";
+import { CoordControls } from "./control/CoordControls";
 import { MainStage } from "./MainStage";
 
 const wrapper = css`
-  position: absolute;
-  width: 90%;
-  height: 90%;
-  left: 5%;
-  top: 5%;
+  position: relative;
+`;
+
+const layout = css`
+  display: grid;
+  grid-template-rows: 80px 1fr;
+  height: 100vh;
 `;
 
 export const App = () => {
   return (
-    <>
+    <div className={layout}>
+      <CoordControls />
       <div className={wrapper}>
         <MainStage />
       </div>
-    </>
+    </div>
   );
 };
 

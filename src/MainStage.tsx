@@ -1,9 +1,12 @@
 import { css } from "@kuma-ui/core";
-import { PointerEvent } from "react";
+import { useSetAtom } from "jotai";
+import { PointerEvent, useRef } from "react";
 
-import { dom2canvasPoint } from "./coord/CanvasCoord";
-import { Point } from "./coord/Point";
+import { DPR } from "./coord/DPR";
 import { useFullCanvas } from "./FullCanvas";
+import { pointerActions } from "./state/pointerActions/defaultPointerActions";
+import { useDrawStage } from "./useDrawStage";
+import { createPointerThrottle } from "./utils/pointerThrottle";
 
 const baseStyle = css`
   width: 100%;
@@ -13,28 +16,25 @@ const baseStyle = css`
   left: 0;
 `;
 
-const drawCircle = (ctx: CanvasRenderingContext2D, pos: Point) => {
-  ctx.beginPath();
-  ctx.arc(pos.x, pos.y, 10, 0, 2 * Math.PI);
-  ctx.fill();
-};
-
 export const MainStage = () => {
   const stage = useFullCanvas();
+  const throttle = useRef(createPointerThrottle(DPR));
+  const onMove = useSetAtom(pointerActions.onMoveAction);
+  const onDown = useSetAtom(pointerActions.onDownAction);
 
-  const onDown = (ev: PointerEvent<HTMLDivElement>) => {
-    console.log(ev.clientX, ev.clientY);
-    const ctx = stage.ctx;
-    if (!ctx) return;
-    const canvasP = dom2canvasPoint({
-      x: ev.nativeEvent.offsetX,
-      y: ev.nativeEvent.offsetY,
-    });
-    drawCircle(ctx, canvasP);
+  const handleMove = (ev: PointerEvent<HTMLElement>) => {
+    if (!throttle.current(ev)) return;
+    onMove(ev);
   };
 
+  useDrawStage(stage.ctx);
+
   return (
-    <div className={baseStyle} onPointerDown={onDown}>
+    <div
+      className={baseStyle}
+      onPointerMove={handleMove}
+      onPointerDown={onDown}
+    >
       {stage.element}
     </div>
   );

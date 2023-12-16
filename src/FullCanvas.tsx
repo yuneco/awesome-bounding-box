@@ -6,12 +6,12 @@ import { Size } from "./coord/Size";
 import useElementSize from "./utils/useElementSize";
 
 const baseStyle = css`
-  width: 100%;
-  height: 100%;
+  width: 400px;
+  height: 300px;
   position: absolute;
   top: 0;
   left: 0;
-  border: 1px solid #000;
+  //  outline: 1px solid #000;
 `;
 
 const setCanavasSize = (canvas: HTMLCanvasElement, size: Size) => {
@@ -24,7 +24,7 @@ export const useFullCanvas = () => {
   const canvasSize = useElementSize(canvasRef);
 
   const canvas = canvasRef.current;
-  const ctx = canvas?.getContext("2d");
+  const ctx = canvas?.getContext("2d") ?? undefined;
 
   useEffect(() => {
     if (!canvas) return;

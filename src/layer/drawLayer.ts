@@ -2,6 +2,7 @@ import { Matrix, compose, decomposeTSR } from "transformation-matrix";
 
 import { applyMatrix, identityMatrix, toMatrix } from "../coord/Coord";
 import { DPR } from "../coord/DPR";
+import { findImage } from "../state/pointerActions/layerImageState";
 
 import { drawBoundingBox } from "./boundingBox/drawBoundingBox";
 import { DrawOption } from "./DrawOption";
@@ -10,18 +11,26 @@ import { Layer } from "./Layer";
 const drawlayerBg = (
   ctx: CanvasRenderingContext2D,
   layer: Layer,
-  scale: number
+  isRoot: boolean
 ) => {
   const { width, height } = layer.size;
   ctx.fillStyle = layer.color;
   ctx.fillRect(0, 0, width, height);
+
+  if (!isRoot) {
+    const img = findImage(layer.id);
+    if (img) {
+      ctx.drawImage(img, 0, 0, width, height);
+    }
+  }
 };
 
 const drawLayerImpl = (
   ctx: CanvasRenderingContext2D,
   layer: Layer,
   matrix: Matrix,
-  options: DrawOption
+  options: DrawOption,
+  isRoot: boolean
 ) => {
   const selfMatrix = compose(matrix, toMatrix(layer.coord));
   ctx.save();
@@ -30,7 +39,7 @@ const drawLayerImpl = (
   const tr = decomposeTSR(selfMatrix);
   const scale = tr.scale.sx;
 
-  drawlayerBg(ctx, layer, scale);
+  drawlayerBg(ctx, layer, isRoot);
   if (options.focusId === layer.id) {
     ctx.strokeStyle = "red";
     ctx.lineWidth = DPR / scale;
@@ -44,7 +53,7 @@ const drawLayerImpl = (
   }
 
   layer.children.forEach((child) => {
-    drawLayerImpl(ctx, child, selfMatrix, options);
+    drawLayerImpl(ctx, child, selfMatrix, options, false);
   });
 
   ctx.restore();
@@ -55,7 +64,7 @@ export const drawLayer = (
   layer: Layer,
   options: DrawOption = {}
 ) => {
-  drawLayerImpl(ctx, layer, identityMatrix, options);
+  drawLayerImpl(ctx, layer, identityMatrix, options, true);
 
   if (options.selectedId) {
     drawBoundingBox(ctx, layer, options.selectedId, options.boundingOptions);

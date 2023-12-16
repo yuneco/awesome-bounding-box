@@ -49,13 +49,24 @@ export const continueResizeAction = atom(
       pointer.dragStartCanvasPoint
     );
 
+    const whRatio = pointer.dragStartSize.width / pointer.dragStartSize.height;
     const diff = pointToSize(subPoint(localToP, localFromP));
+    const handle = pointer.dragHandle;
+    const revY = handle === "left-bottom" || handle === "right-top";
+    const keepRatioDiff = {
+      width: diff.width,
+      height: (diff.width / whRatio) * (revY ? -1 : 1),
+    };
 
     const startSizeAndCoord = {
       size: pointer.dragStartSize,
       coord: pointer.dragStartCoord,
     };
-    const update = resizeLayer(startSizeAndCoord, pointer.dragHandle, diff);
+    const update = resizeLayer(
+      startSizeAndCoord,
+      pointer.dragHandle,
+      keepRatioDiff
+    );
     set(updateLayerAction, self.layer.id, update);
   }
 );

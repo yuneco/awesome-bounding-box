@@ -14,6 +14,8 @@ export const layerTreeAtom = atom((get) => {
   return get(layerTreeBaseAtom);
 });
 
+export const treeVersionAtom = atom((get) => get(version));
+
 export const updateLayerAction = atom(
   undefined,
   (get, set, id: string, props: Partial<LayerProps>) => {

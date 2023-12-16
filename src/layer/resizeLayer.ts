@@ -11,6 +11,8 @@ type SizeWithCoord = {
   coord: Coord;
 };
 
+const MIN = 30;
+
 /**
  * get resized layer size and coord.
  * @param from current layer size and coord
@@ -28,11 +30,11 @@ export const resizeLayer = (
   const isTop = handle === "left-top" || handle === "right-top";
 
   const toW = isLeft
-    ? from.size.width - diff.width
-    : from.size.width + diff.width;
+    ? Math.max(MIN, from.size.width - diff.width)
+    : Math.max(MIN, from.size.width + diff.width);
   const toH = isTop
-    ? from.size.height - diff.height
-    : from.size.height + diff.height;
+    ? Math.max(MIN, from.size.height - diff.height)
+    : Math.max(MIN, from.size.height + diff.height);
 
   const anchorXRatio = fromAnchor.x / from.size.width;
   const anchorYRatio = fromAnchor.y / from.size.height;

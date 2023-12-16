@@ -1,30 +1,17 @@
 import {
   applyToPoint,
   compose,
-  identity,
+  decomposeTSR,
   inverse,
 } from "transformation-matrix";
 
-import { applyMatrix, identityMatrix, toMatrix } from "../../coord/Coord";
+import { applyMatrix, identityMatrix } from "../../coord/Coord";
 import { Point } from "../../coord/Point";
-import { findLayerPathById } from "../findLayerById";
 import { Layer } from "../Layer";
+import { getLayerWithMatrix } from "../toLocal";
 
 import { basicBoundingBox } from "./basicBoundingBox";
 import { BoxElement } from "./boundingBoxLayout";
-
-const getLayerWithMatrix = (root: Layer, layerId: string) => {
-  const path = findLayerPathById(root, layerId);
-  if (!path) return;
-  const layer = path[path.length - 1];
-  if (!layer) return;
-
-  const matrix = path.reduce((acc, layer) => {
-    return compose(acc, toMatrix(layer.coord));
-  }, identity());
-
-  return { matrix, layer };
-};
 
 export const drawBoundingBox = (
   ctx: CanvasRenderingContext2D,
@@ -35,10 +22,12 @@ export const drawBoundingBox = (
   if (!found) return;
   const { matrix, layer } = found;
   const canvasMatrix = compose(identityMatrix, matrix);
+  const tr = decomposeTSR(canvasMatrix);
+  const scale = tr.scale.sx;
 
   ctx.save();
   applyMatrix(ctx, canvasMatrix);
-  basicBoundingBox.draw(ctx, layer);
+  basicBoundingBox.draw(ctx, layer, scale);
   ctx.restore();
 };
 
@@ -51,7 +40,8 @@ export const getBoundinfBoxHandleAt = (
   if (!found) return;
 
   const { matrix, layer } = found;
-  const scale = matrix.a;
+  const tr = decomposeTSR(matrix);
+  const scale = tr.scale.sx;
 
   const layerPoint = applyToPoint(inverse(matrix), canvasPoint);
 

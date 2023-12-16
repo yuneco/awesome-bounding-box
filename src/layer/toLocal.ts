@@ -1,10 +1,40 @@
-import { Matrix, applyToPoint, compose, identity } from "transformation-matrix";
+import { Matrix, compose, identity } from "transformation-matrix";
 
 import { toMatrix } from "../coord/Coord";
-import { Point } from "../coord/Point";
 
 import { findLayerPathById } from "./findLayerById";
 import { Layer } from "./Layer";
+
+export const getLayerWithMatrix = (root: Layer, layerId: string) => {
+  const path = findLayerPathById(root, layerId);
+  if (!path) return;
+  const layer = path[path.length - 1];
+  if (!layer) return;
+
+  const matrix = path.reduce((acc, layer) => {
+    return compose(acc, toMatrix(layer.coord));
+  }, identity());
+
+  return { matrix, layer };
+};
+
+export const getParentWithMatrix = (root: Layer, layerId: string) => {
+  const path = findLayerPathById(root, layerId);
+  if (!path) return;
+  const layer = path.pop();
+  if (!layer) return;
+  if (path.length === 0) {
+    return {
+      layer,
+      matrix: identity(),
+    };
+  }
+  const matrix = path.reduce((acc, layer) => {
+    return compose(acc, toMatrix(layer.coord));
+  }, identity());
+
+  return { matrix, layer };
+};
 
 export const getParentMatrix = (
   root: Layer,
@@ -28,23 +58,4 @@ export const getParentMatrix = (
     (acc, layer) => compose(acc, toMatrix(layer.coord)),
     identity()
   );
-};
-
-/**
- * transform global point to target's parent local point.
- * @param root root layer
- * @param id target layer id
- * @param gp global point
- * @returns taget layer parent's local point
- */
-export const toParentLocal = (
-  root: Layer,
-  id: string,
-  gp: Point
-): Point | undefined => {
-  const matrix = getParentMatrix(root, id);
-  if (!matrix) {
-    return undefined;
-  }
-  return applyToPoint(matrix, gp);
 };

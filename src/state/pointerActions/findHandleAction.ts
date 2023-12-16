@@ -15,5 +15,5 @@ export const findHandleAction = atom(undefined, (get, set, canvasP: Point) => {
     return undefined;
   }
   const root = get(layerTreeAtom);
-  return getBoundinfBoxHandleAt(canvasP, root, pointer.selectedLayer.id);
+  return getBoundinfBoxHandleAt(canvasP, root, pointer.selectedLayer);
 });

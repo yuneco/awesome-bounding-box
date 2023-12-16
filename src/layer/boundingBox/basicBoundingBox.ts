@@ -62,8 +62,7 @@ const drawCircleAt = (
   ctx.arc(point.x, point.y, r, 0, Math.PI * 2);
 };
 
-const draw = (ctx: CanvasRenderingContext2D, layer: Layer) => {
-  const scale = ctx.getTransform().a;
+const draw = (ctx: CanvasRenderingContext2D, layer: Layer, scale: number) => {
   const { box, handles } = layout(layer.size, scale);
 
   ctx.save();
@@ -96,9 +95,6 @@ const findHandle = (
 
   // rotate handle
   const rotateHandle = handles["rotate"];
-
-  const dist = distance(point, rotateHandle.center);
-  console.log(dist, point, rotateHandle.center);
 
   if (distance(point, rotateHandle.center) <= rotateHandle.radius) {
     return "rotate";

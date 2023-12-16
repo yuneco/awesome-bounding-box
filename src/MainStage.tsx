@@ -21,6 +21,7 @@ export const MainStage = () => {
   const throttle = useRef(createPointerThrottle(DPR));
   const onMove = useSetAtom(pointerActions.onMoveAction);
   const onDown = useSetAtom(pointerActions.onDownAction);
+  const onUp = useSetAtom(pointerActions.onUpAction);
 
   const handleMove = (ev: PointerEvent<HTMLElement>) => {
     if (!throttle.current(ev)) return;
@@ -34,6 +35,7 @@ export const MainStage = () => {
       className={baseStyle}
       onPointerMove={handleMove}
       onPointerDown={onDown}
+      onPointerUp={onUp}
     >
       {stage.element}
     </div>

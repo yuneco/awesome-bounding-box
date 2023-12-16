@@ -1,4 +1,4 @@
-import { Matrix, compose } from "transformation-matrix";
+import { Matrix, compose, decomposeTSR } from "transformation-matrix";
 
 import { applyMatrix, identityMatrix, toMatrix } from "../coord/Coord";
 import { DPR } from "../coord/DPR";
@@ -23,7 +23,8 @@ const drawLayerImpl = (
   ctx.save();
 
   applyMatrix(ctx, selfMatrix);
-  const scale = selfMatrix.a;
+  const tr = decomposeTSR(selfMatrix);
+  const scale = tr.scale.sx;
 
   drawlayerBg(ctx, layer);
   if (options.focusId === layer.id) {

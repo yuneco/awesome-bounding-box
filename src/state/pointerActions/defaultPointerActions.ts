@@ -3,12 +3,13 @@ import { PointerEvent } from "react";
 
 import { RESIZE_HANDLE_NAMES } from "../../layer/boundingBox/boundingBoxLayout";
 import { ev2point } from "../../utils/ev2point";
-import { pointerStateAtom } from "../pointerState";
+import { pointerStateAtom, setPointerAction } from "../pointerState";
 
 import { findHandleAction } from "./findHandleAction";
-import { findLayerAction } from "./findLayerAction";
+import { findLayerAtAction, findLayerByIdAction } from "./findLayerAction";
 import { blurAction, focusAction } from "./focusAction";
 import { continueMoveAction, startMoveAction } from "./moveAction";
+import { continueRotateAction, startRotateAction } from "./rotateAction";
 
 const onMoveAction = atom(
   undefined,
@@ -22,16 +23,20 @@ const onMoveAction = atom(
       const handle = set(findHandleAction, canvasP);
       const onHandle = handle && handle !== "body";
       document.body.style.cursor = onHandle ? "crosshair" : "default";
-      if (onHandle) {
-        console.log("handle", handle);
-      }
 
       set(focusAction, canvasP);
       return;
     }
 
     // dragging
-    set(continueMoveAction, canvasP);
+    switch (pointer.dragAction) {
+      case "rotate":
+        set(continueRotateAction, canvasP);
+        break;
+      case "move":
+        set(continueMoveAction, canvasP);
+        break;
+    }
   }
 );
 
@@ -42,19 +47,22 @@ const onDownAction = atom(
     const current = get(pointerStateAtom);
 
     const handle = set(findHandleAction, canvasP);
-    const boundingTarget = handle ? current.selectedLayer : undefined;
+    const boundingId = handle ? current.selectedLayer : undefined;
+    const boundingLayer = boundingId
+      ? set(findLayerByIdAction, boundingId)
+      : undefined;
 
-    const found = set(findLayerAction, canvasP);
+    const found = set(findLayerAtAction, canvasP);
     // If the bounding box and the newly clicked item overlap, prioritize the latter
-    const target = found?.layer ?? boundingTarget;
+    const target = found?.layer ?? boundingLayer;
     if (!target) {
       set(blurAction);
       return;
     }
 
-    if (handle && handle !== "body") {
+    if (handle && handle !== "body" && boundingLayer) {
       if (handle === "rotate") {
-        console.log("rotate");
+        set(startRotateAction, canvasP, boundingLayer);
       } else if (RESIZE_HANDLE_NAMES.includes(handle)) {
         console.log("resize", handle);
       }
@@ -65,7 +73,23 @@ const onDownAction = atom(
   }
 );
 
+const onUpAction = atom(
+  undefined,
+  (get, set, ev: PointerEvent<HTMLElement>) => {
+    const canvasP = ev2point(ev);
+    const current = get(pointerStateAtom);
+    set(setPointerAction, {
+      dragAction: "none",
+      lastCanvasPoint: canvasP,
+      focusLayer: undefined,
+      selectedLayer: current.selectedLayer,
+    });
+    set(focusAction, canvasP);
+  }
+);
+
 export const pointerActions = {
   onMoveAction,
   onDownAction,
+  onUpAction,
 };

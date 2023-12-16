@@ -24,7 +24,7 @@ export const sampleLayer = createLayer(
           coord: {
             position: { x: 200, y: 100 },
             scale: 1.5,
-            angle: 0,
+            angle: 30,
           },
           size: { width: 100, height: 150 },
           children: [

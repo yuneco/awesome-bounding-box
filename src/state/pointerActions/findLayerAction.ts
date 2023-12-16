@@ -4,6 +4,7 @@ import { compose, applyToPoint, inverse } from "transformation-matrix";
 import { toMatrix } from "../../coord/Coord";
 import { Point } from "../../coord/Point";
 import { findLayerAt } from "../../layer/findLayerAt";
+import { findLayerById } from "../../layer/findLayerById";
 import { Layer } from "../../layer/Layer";
 import { getParentMatrix } from "../../layer/toLocal";
 import { layerTreeAtom } from "../layerTreeState";
@@ -14,7 +15,7 @@ export type PointerTarget = {
   parentPoint: Point;
 };
 
-export const findLayerAction = atom(
+export const findLayerAtAction = atom(
   undefined,
   (get, set, canvasPoint: Point): PointerTarget | undefined => {
     const root = get(layerTreeAtom);
@@ -32,5 +33,15 @@ export const findLayerAction = atom(
       localPoint: applyToPoint(inverse(layerMatrix), canvasPoint),
       parentPoint: applyToPoint(inverse(parentMatrix), canvasPoint),
     };
+  }
+);
+
+export const findLayerByIdAction = atom(
+  undefined,
+  (get, set, layerId: string): Layer | undefined => {
+    const root = get(layerTreeAtom);
+    const layer = findLayerById(root, layerId);
+
+    return layer;
   }
 );

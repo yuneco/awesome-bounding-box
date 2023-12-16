@@ -3,9 +3,11 @@ import { applyToPoint, inverse } from "transformation-matrix";
 
 import { Point, addPoint, subPoint } from "../../coord/Point";
 import { Layer } from "../../layer/Layer";
-import { getParentMatrix } from "../../layer/toLocal";
+import { getParentWithMatrix } from "../../layer/toLocal";
 import { layerTreeAtom, updateLayerAction } from "../layerTreeState";
 import { pointerStateAtom, setPointerAction } from "../pointerState";
+
+import { findLayerByIdAction } from "./findLayerAction";
 
 export const startMoveAction = atom(
   undefined,
@@ -13,8 +15,8 @@ export const startMoveAction = atom(
     set(setPointerAction, {
       dragAction: "move",
       lastCanvasPoint: canvasP,
-      focusLayer: target,
-      selectedLayer: target,
+      focusLayer: target.id,
+      selectedLayer: target.id,
       dragStartCanvasPoint: canvasP,
       dragStartCoord: target.coord,
     });
@@ -38,10 +40,13 @@ export const continueMoveAction = atom(
       dragStartCoord: pointer.dragStartCoord,
     });
 
-    const target = pointer.selectedLayer;
+    const targetId = pointer.selectedLayer;
     const moveDiff = subPoint(canvasP, pointer.dragStartCanvasPoint);
-    const parentMatrix = getParentMatrix(get(layerTreeAtom), target.id);
-    if (!parentMatrix) return;
+
+    const targetLayer = set(findLayerByIdAction, targetId);
+    const parent = getParentWithMatrix(get(layerTreeAtom), targetId);
+    const parentMatrix = parent?.matrix;
+    if (!targetLayer || !parentMatrix) return;
     const posZero = applyToPoint(inverse(parentMatrix), { x: 0, y: 0 });
     const posMove = applyToPoint(inverse(parentMatrix), moveDiff);
     const move = addPoint(
@@ -50,9 +55,9 @@ export const continueMoveAction = atom(
     );
 
     // move target
-    set(updateLayerAction, pointer.selectedLayer.id, {
+    set(updateLayerAction, pointer.selectedLayer, {
       coord: {
-        ...target.coord,
+        ...targetLayer.coord,
         position: move,
       },
     });

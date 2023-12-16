@@ -9,6 +9,7 @@ import { findHandleAction } from "./findHandleAction";
 import { findLayerAtAction, findLayerByIdAction } from "./findLayerAction";
 import { blurAction, focusAction } from "./focusAction";
 import { continueMoveAction, startMoveAction } from "./moveAction";
+import { continueResizeAction, startResizeAction } from "./resizeAction";
 import { continueRotateAction, startRotateAction } from "./rotateAction";
 
 const onMoveAction = atom(
@@ -35,6 +36,9 @@ const onMoveAction = atom(
         break;
       case "move":
         set(continueMoveAction, canvasP);
+        break;
+      case "resize":
+        set(continueResizeAction, canvasP);
         break;
     }
   }
@@ -64,7 +68,7 @@ const onDownAction = atom(
       if (handle === "rotate") {
         set(startRotateAction, canvasP, boundingLayer);
       } else if (RESIZE_HANDLE_NAMES.includes(handle)) {
-        console.log("resize", handle);
+        set(startResizeAction, canvasP, boundingLayer, handle);
       }
       return;
     }

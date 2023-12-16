@@ -2,6 +2,8 @@ import { atom } from "jotai";
 
 import { Coord } from "../coord/Coord";
 import { Point } from "../coord/Point";
+import { Size } from "../coord/Size";
+import { ResizeHanle } from "../layer/boundingBox/boundingBoxLayout";
 
 type BaseState = {
   lastCanvasPoint: Point;
@@ -9,9 +11,9 @@ type BaseState = {
   selectedLayer: string | undefined;
 };
 
-type DraggingState = Readonly<
+type DragBaseState = Readonly<
   BaseState & {
-    dragAction: "move" | "rotate" | "scale" | "none";
+    dragAction: "move" | "rotate" | "resize";
     focusLayer: string;
     selectedLayer: string;
     dragStartCanvasPoint: Point;
@@ -19,13 +21,37 @@ type DraggingState = Readonly<
   }
 >;
 
-type MovingStateState = Readonly<
+type DragMoveState = Readonly<
+  DragBaseState & {
+    dragAction: "move";
+  }
+>;
+
+type DragRotateState = Readonly<
+  DragBaseState & {
+    dragAction: "rotate";
+  }
+>;
+
+type DragResizeState = Readonly<
+  DragBaseState & {
+    dragAction: "resize";
+    dragHandle: ResizeHanle;
+    dragStartSize: Size;
+  }
+>;
+
+type PointerHoverState = Readonly<
   BaseState & {
     dragAction: "none";
   }
 >;
 
-export type PointerState = DraggingState | MovingStateState;
+export type PointerState =
+  | PointerHoverState
+  | DragMoveState
+  | DragRotateState
+  | DragResizeState;
 
 export const INITIAL_POINTER_STATE: PointerState = {
   dragAction: "none",

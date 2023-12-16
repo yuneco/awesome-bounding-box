@@ -32,12 +32,8 @@ export const continueMoveAction = atom(
     }
 
     set(setPointerAction, {
-      dragAction: pointer.dragAction,
+      ...pointer,
       lastCanvasPoint: canvasP,
-      focusLayer: pointer.focusLayer,
-      selectedLayer: pointer.selectedLayer,
-      dragStartCanvasPoint: pointer.dragStartCanvasPoint,
-      dragStartCoord: pointer.dragStartCoord,
     });
 
     const targetId = pointer.selectedLayer;

@@ -7,7 +7,11 @@ import { drawBoundingBox } from "./boundingBox/drawBoundingBox";
 import { DrawOption } from "./DrawOption";
 import { Layer } from "./Layer";
 
-const drawlayerBg = (ctx: CanvasRenderingContext2D, layer: Layer) => {
+const drawlayerBg = (
+  ctx: CanvasRenderingContext2D,
+  layer: Layer,
+  scale: number
+) => {
   const { width, height } = layer.size;
   ctx.fillStyle = layer.color;
   ctx.fillRect(0, 0, width, height);
@@ -26,7 +30,7 @@ const drawLayerImpl = (
   const tr = decomposeTSR(selfMatrix);
   const scale = tr.scale.sx;
 
-  drawlayerBg(ctx, layer);
+  drawlayerBg(ctx, layer, scale);
   if (options.focusId === layer.id) {
     ctx.strokeStyle = "red";
     ctx.lineWidth = DPR / scale;

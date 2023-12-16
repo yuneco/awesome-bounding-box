@@ -1,7 +1,7 @@
 import { useAtomValue } from "jotai";
 
 import { drawLayer } from "./layer/drawLayer";
-import { drawOptionAtom } from "./state/drawState";
+import { drawOptionAtom } from "./state/drawOptionState";
 import { layerTreeAtom } from "./state/layerTreeState";
 import { wrapCtx } from "./utils/wrapCtx";
 

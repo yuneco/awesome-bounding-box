@@ -9,6 +9,7 @@ import {
   BoxElement,
   RESIZE_HANDLE_NAMES,
 } from "./boundingBoxLayout";
+import { BoundingDrawOption } from "./boundingDrawOption";
 
 const layout = (size: Size, scale: number): BoundingBoxLayout => {
   const padding = (2 / scale) * DPR;
@@ -62,12 +63,18 @@ const drawCircleAt = (
   ctx.arc(point.x, point.y, r, 0, Math.PI * 2);
 };
 
-const draw = (ctx: CanvasRenderingContext2D, layer: Layer, scale: number) => {
+const draw = (
+  ctx: CanvasRenderingContext2D,
+  layer: Layer,
+  scale: number,
+  options: BoundingDrawOption
+) => {
   const { box, handles } = layout(layer.size, scale);
 
   ctx.save();
   ctx.strokeStyle = "red";
   ctx.lineWidth = DPR / scale;
+
   ctx.beginPath();
   ctx.rect(box.x, box.y, box.width, box.height);
   RESIZE_HANDLE_NAMES.forEach((name) => {
@@ -82,6 +89,29 @@ const draw = (ctx: CanvasRenderingContext2D, layer: Layer, scale: number) => {
   const rotateHandle = handles["rotate"];
   drawCircleAt(ctx, rotateHandle.center, rotateHandle.radius);
   ctx.fill();
+
+  if (options.dragAction === "resize") {
+    // draw layer size label
+    ctx.fillStyle = "black";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "bottom";
+    const LABEL_FONT_SIZE = 8;
+    ctx.font = `${(LABEL_FONT_SIZE * DPR) / scale}px sans-serif`;
+    // draw width on top
+    ctx.fillText(
+      `${Math.round(layer.size.width)}`,
+      box.x + box.width / 2,
+      box.y + box.height + ((LABEL_FONT_SIZE * DPR) / scale) * 1.4
+    );
+    // draw height on right
+    ctx.rotate(Math.PI / 2);
+    ctx.translate(box.height, -box.width);
+    ctx.fillText(
+      `${Math.round(layer.size.height)}`,
+      -(box.y + box.height / 2),
+      box.x + ((LABEL_FONT_SIZE * DPR) / scale) * 0.2
+    );
+  }
 
   ctx.restore();
 };

@@ -12,11 +12,13 @@ import { getLayerWithMatrix } from "../toLocal";
 
 import { basicBoundingBox } from "./basicBoundingBox";
 import { BoxElement } from "./boundingBoxLayout";
+import { BoundingDrawOption } from "./boundingDrawOption";
 
 export const drawBoundingBox = (
   ctx: CanvasRenderingContext2D,
   root: Layer,
-  layerId: string
+  layerId: string,
+  options: BoundingDrawOption = {}
 ) => {
   const found = getLayerWithMatrix(root, layerId);
   if (!found) return;
@@ -27,7 +29,7 @@ export const drawBoundingBox = (
 
   ctx.save();
   applyMatrix(ctx, canvasMatrix);
-  basicBoundingBox.draw(ctx, layer, scale);
+  basicBoundingBox.draw(ctx, layer, scale, options);
   ctx.restore();
 };
 

@@ -58,6 +58,6 @@ export const drawLayer = (
   drawLayerImpl(ctx, layer, identityMatrix, options);
 
   if (options.selectedId) {
-    drawBoundingBox(ctx, layer, options.selectedId);
+    drawBoundingBox(ctx, layer, options.selectedId, options.boundingOptions);
   }
 };

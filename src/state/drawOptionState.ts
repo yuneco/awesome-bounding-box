@@ -9,5 +9,8 @@ export const drawOptionAtom = atom((get): DrawOption => {
   return {
     focusId: pointer.focusLayer,
     selectedId: pointer.selectedLayer,
+    boundingOptions: {
+      dragAction: pointer.dragAction,
+    },
   };
 });

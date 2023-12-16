@@ -17,12 +17,12 @@ export const focusAction = atom(undefined, (get, set, canvasP: Point) => {
   });
 });
 
-export const blurAction = atom(undefined, (get, set) => {
+export const blurAction = atom(undefined, (get, set, clearSelect = false) => {
   const current = get(pointerStateAtom);
   set(setPointerAction, {
     dragAction: "none",
     lastCanvasPoint: current.lastCanvasPoint,
     focusLayer: undefined,
-    selectedLayer: current.selectedLayer,
+    selectedLayer: clearSelect ? undefined : current.selectedLayer,
   });
 });

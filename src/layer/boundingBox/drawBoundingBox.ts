@@ -6,13 +6,17 @@ import {
 } from "transformation-matrix";
 
 import { applyMatrix, identityMatrix } from "../../coord/Coord";
+import { DPR } from "../../coord/DPR";
 import { Point } from "../../coord/Point";
 import { Layer } from "../Layer";
 import { getLayerWithMatrix } from "../toLocal";
 
-import { basicBoundingBox } from "./basicBoundingBox";
 import { BoxElement } from "./boundingBoxLayout";
 import { BoundingDrawOption } from "./boundingDrawOption";
+import { findHandleInLayout } from "./findHandle";
+import { partyBoundingBox } from "./partyBoundingBox";
+
+const currentBoundingDef = partyBoundingBox;
 
 export const drawBoundingBox = (
   ctx: CanvasRenderingContext2D,
@@ -29,7 +33,7 @@ export const drawBoundingBox = (
 
   ctx.save();
   applyMatrix(ctx, canvasMatrix);
-  basicBoundingBox.draw(ctx, layer, scale, options);
+  currentBoundingDef.draw(ctx, layer, scale, options);
   ctx.restore();
 };
 
@@ -46,6 +50,6 @@ export const getBoundinfBoxHandleAt = (
   const scale = tr.scale.sx;
 
   const layerPoint = applyToPoint(inverse(matrix), canvasPoint);
-
-  return basicBoundingBox.findHandle(layer, layerPoint, scale);
+  const layout = currentBoundingDef.layout(layer.size, scale * DPR);
+  return findHandleInLayout(layout, layerPoint);
 };

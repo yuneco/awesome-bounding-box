@@ -1,13 +1,7 @@
 import { Point } from "../../coord/Point";
-import { Rect } from "../../coord/Rect";
+import { RECT_CORNER, Rect } from "../../coord/Rect";
 
-export const RESIZE_HANDLE_NAMES = [
-  "left-top",
-  "left-bottom",
-  "right-top",
-  "right-bottom",
-] as const;
-
+export const RESIZE_HANDLE_NAMES = RECT_CORNER;
 export const ROTATE_HANDLE_NAME = "rotate";
 export const BOX_BODY = "body";
 

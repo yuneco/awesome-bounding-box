@@ -7,6 +7,14 @@ export type Rect = Readonly<{
   height: number;
 }>;
 
+export const RECT_CORNER = [
+  "left-top",
+  "left-bottom",
+  "right-top",
+  "right-bottom",
+] as const;
+export type RectCorner = (typeof RECT_CORNER)[number];
+
 export const moveRect = (rect: Rect, point: Point): Rect => ({
   x: rect.x + point.x,
   y: rect.y + point.y,
@@ -28,4 +36,13 @@ export const isInRect = (rect: Rect, point: Point): boolean => {
     point.x <= rect.x + rect.width &&
     point.y <= rect.y + rect.height
   );
+};
+
+export const getRectCorners = (rect: Rect): { [key in RectCorner]: Point } => {
+  return {
+    "left-top": { x: rect.x, y: rect.y },
+    "left-bottom": { x: rect.x, y: rect.y + rect.height },
+    "right-top": { x: rect.x + rect.width, y: rect.y },
+    "right-bottom": { x: rect.x + rect.width, y: rect.y + rect.height },
+  };
 };

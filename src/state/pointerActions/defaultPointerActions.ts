@@ -60,7 +60,7 @@ const onDownAction = atom(
     // If the bounding box and the newly clicked item overlap, prioritize the latter
     const target = found?.layer ?? boundingLayer;
     if (!target) {
-      set(blurAction);
+      set(blurAction, true);
       return;
     }
 

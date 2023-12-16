@@ -12,6 +12,7 @@
   "dependencies": {
     "@kuma-ui/core": "^1.5.4",
     "@kuma-ui/vite": "^1.2.0",
+    "fast-simplex-noise": "^4.0.0",
     "jotai": "^2.6.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

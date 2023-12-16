@@ -1,21 +1,25 @@
 import { atom, getDefaultStore } from "jotai";
 
-import { flatTree } from "../../layer/flatTree";
-import { layerTreeAtom } from "../layerTreeState";
+import { DPR } from "../coord/DPR";
+import { flatTree } from "../layer/flatTree";
+
+import { layerTreeAtom } from "./layerTreeState";
 
 const version = atom(0);
 const imagesBaseAtom = atom(new Map<string, HTMLImageElement>());
 
 export const loadImageAction = atom(undefined, (get, set) => {
   const tree = get(layerTreeAtom);
-  const ids = flatTree(tree).map((layer) => layer.id);
+  const layers = flatTree(tree).filter((layer) => layer !== tree);
 
   const images = get(imagesBaseAtom);
-  ids.forEach((id) => {
-    if (images.has(id)) return;
+  layers.forEach((layer) => {
+    if (images.has(layer.id)) return;
     const img = new Image();
-    img.src = `https://picsum.photos/seed/${id}/600/600`;
-    images.set(id, img);
+    img.src = `https://picsum.photos/seed/${layer.id}/${
+      layer.size.width * DPR
+    }/${layer.size.height * DPR}`;
+    images.set(layer.id, img);
     img.onload = () => {
       set(version, get(version) + 1);
     };

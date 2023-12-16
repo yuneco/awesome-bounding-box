@@ -73,10 +73,10 @@ const draw: CustomBoundingBoxDraw = (ctx, layer, scale, options) => {
 
   // draw body box
   const wave = (time * 2) % 1;
-  const expansion = wave * 3 * DPR;
-  ctx.strokeStyle = `hsl(${time * 360 * 3}, 100%, 50%, ${1 - wave ** 3})`;
+  const expansion = wave * 5 * DPR;
   for (let index = 0; index < 3; index++) {
     const bodyBox = expandRect(box, expansion / (index + 1));
+    ctx.strokeStyle = `hsl(${time * 360 * 3}, 100%, 70%, ${1 - wave ** 3})`;
     ctx.lineWidth = (expansion * (index + 1) * unit) / 3;
     ctx.beginPath();
     ctx.rect(bodyBox.x, bodyBox.y, bodyBox.width, bodyBox.height);

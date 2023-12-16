@@ -6,12 +6,12 @@ import { Size } from "./coord/Size";
 import useElementSize from "./utils/useElementSize";
 
 const baseStyle = css`
-  width: 400px;
-  height: 300px;
+  width: 100%;
+  height: 100%;
   position: absolute;
   top: 0;
   left: 0;
-  //  outline: 1px solid #000;
+  outline: 1px solid #000;
 `;
 
 const setCanavasSize = (canvas: HTMLCanvasElement, size: Size) => {

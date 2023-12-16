@@ -11,12 +11,21 @@ import { Point } from "../../coord/Point";
 import { Layer } from "../Layer";
 import { getLayerWithMatrix } from "../toLocal";
 
+import { basicBoundingBox } from "./basicBoundingBox";
+import { BoundingBoxKind } from "./BoundingBoxKind";
 import { BoxElement } from "./boundingBoxLayout";
 import { BoundingDrawOption } from "./boundingDrawOption";
 import { findHandleInLayout } from "./findHandle";
 import { partyBoundingBox } from "./partyBoundingBox";
 
-const currentBoundingDef = partyBoundingBox;
+const getDef = (kind: BoundingBoxKind | undefined) => {
+  switch (kind) {
+    case "party":
+      return partyBoundingBox;
+    default:
+      return basicBoundingBox;
+  }
+};
 
 export const drawBoundingBox = (
   ctx: CanvasRenderingContext2D,
@@ -33,14 +42,15 @@ export const drawBoundingBox = (
 
   ctx.save();
   applyMatrix(ctx, canvasMatrix);
-  currentBoundingDef.draw(ctx, layer, scale, options);
+  getDef(options.kind).draw(ctx, layer, scale, options);
   ctx.restore();
 };
 
 export const getBoundinfBoxHandleAt = (
   canvasPoint: Point,
   root: Layer,
-  layerId: string
+  layerId: string,
+  options: BoundingDrawOption = {}
 ): BoxElement | undefined => {
   const found = getLayerWithMatrix(root, layerId);
   if (!found) return;
@@ -50,6 +60,6 @@ export const getBoundinfBoxHandleAt = (
   const scale = tr.scale.sx;
 
   const layerPoint = applyToPoint(inverse(matrix), canvasPoint);
-  const layout = currentBoundingDef.layout(layer.size, scale * DPR);
+  const layout = getDef(options.kind).layout(layer.size, scale * DPR);
   return findHandleInLayout(layout, layerPoint);
 };

@@ -46,14 +46,16 @@ export const updateLayerAction = atom(
 
 export const addLayerAction = atom(
   undefined,
-  (get, set, parentId: string, props: LayerProps) => {
+  (get, set, parentId: string | undefined, props: LayerProps) => {
     const root = get(layerTreeBaseAtom);
-    const parent = findLayerById(root, parentId);
+    const parent = parentId ? findLayerById(root, parentId) : root;
     if (!parent) {
       return;
     }
 
-    parent.children.push(createLayer(props));
+    parent.children.push({ ...createLayer(props), children: [] });
     set(version, get(version) + 1);
+
+    console.log(root);
   }
 );

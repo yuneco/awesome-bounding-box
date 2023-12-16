@@ -9,11 +9,8 @@ import {
   stopAnimationAtom,
 } from "./state/animationState";
 import { drawOptionAtom } from "./state/drawOptionState";
+import { imagesAtom, loadImageAction } from "./state/layerImageState";
 import { layerTreeAtom, treeVersionAtom } from "./state/layerTreeState";
-import {
-  imagesAtom,
-  loadImageAction,
-} from "./state/pointerActions/layerImageState";
 
 const useAnimation = (on: boolean) => {
   const startAnim = useSetAtom(startAnimationAtom);
@@ -31,6 +28,7 @@ const useLayerImage = () => {
   const version = useAtomValue(treeVersionAtom);
   const loadImage = useSetAtom(loadImageAction);
   useEffect(loadImage, [version, loadImage]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(loadImage, []);
 
   const images = useAtomValue(imagesAtom);

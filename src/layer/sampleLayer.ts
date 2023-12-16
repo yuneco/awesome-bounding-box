@@ -6,18 +6,18 @@ export const sampleLayer = createLayer(
       position: { x: 0, y: 0 },
       scale: 1,
       angle: 0,
-      anchor: { x: 200, y: 150 },
+      anchor: { x: 0, y: 0 },
     },
-    size: { width: 400, height: 300 },
+    size: { width: 2000, height: 2000 },
     children: [
       createLayer(
         {
           coord: { position: { x: 50, y: 50 }, scale: 1, angle: 0 },
           size: { width: 50, height: 50 },
           children: [],
-          color: "salmon",
+          color: "silver",
         },
-        "salmon"
+        "layer-salmon"
       ),
       createLayer(
         {
@@ -30,20 +30,20 @@ export const sampleLayer = createLayer(
           children: [
             createLayer(
               {
-                coord: { position: { x: 50, y: 50 }, scale: 2, angle: 0 },
+                coord: { position: { x: 50, y: 50 }, scale: 1, angle: 30 },
                 size: { width: 50, height: 50 },
                 children: [],
-                color: "purple",
+                color: "silver",
               },
-              "purple"
+              "layer-4"
             ),
           ],
-          color: "gold",
+          color: "silver",
         },
-        "gold"
+        "layer-gold"
       ),
     ],
-    color: "powderblue",
+    color: "white",
   },
   "root"
 );

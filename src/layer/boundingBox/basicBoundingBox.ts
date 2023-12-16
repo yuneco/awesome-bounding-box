@@ -49,24 +49,41 @@ const layout: CustomBoundingBoxLayout = (size, scale) => {
 const draw: CustomBoundingBoxDraw = (ctx, layer, scale, options) => {
   const { box, handles } = layout(layer.size, scale);
 
-  ctx.save();
-  ctx.strokeStyle = "red";
-  ctx.lineWidth = DPR / scale;
+  const mainColor = "#66aabb";
+  const unit = DPR / scale;
 
+  ctx.save();
+
+  // body rect
   ctx.beginPath();
   ctx.rect(box.x, box.y, box.width, box.height);
+  ctx.lineWidth = unit * 3;
+  ctx.strokeStyle = "white";
+  ctx.stroke();
+  ctx.lineWidth = unit * 1;
+  ctx.strokeStyle = mainColor;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.strokeStyle = mainColor;
+  ctx.lineWidth = unit * 2;
+  ctx.fillStyle = "white";
   RESIZE_HANDLE_NAMES.forEach((name) => {
     const handle = handles[name];
     drawRectAt(ctx, handle.center, handle.radius * 0.7);
   });
   ctx.stroke();
+  ctx.fill();
 
   // rotate handle
   ctx.beginPath();
-  ctx.fillStyle = "red";
+  ctx.fillStyle = mainColor;
+  ctx.strokeStyle = "white";
+  ctx.lineWidth = unit;
   const rotateHandle = handles["rotate"];
   drawCircleAt(ctx, rotateHandle.center, rotateHandle.radius);
   ctx.fill();
+  ctx.stroke();
 
   if (options.dragAction === "resize") {
     // draw layer size label

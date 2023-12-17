@@ -16,6 +16,7 @@ export const loadImageAction = atom(undefined, (get, set) => {
   layers.forEach((layer) => {
     if (images.has(layer.id)) return;
     const img = new Image();
+    img.crossOrigin = "anonymous";
     img.src = `https://picsum.photos/seed/${layer.id}/${
       layer.size.width * DPR
     }/${layer.size.height * DPR}`;

@@ -5,6 +5,7 @@ import { createLayer } from "../layer/Layer";
 import { drawPartyAtom } from "../state/drawOptionState";
 import { addLayerAction, layerTreeAtom } from "../state/layerTreeState";
 import { pointerStateAtom } from "../state/pointerState";
+import { captureCanvas } from "../utils/captureCanvas";
 import { randomBetween } from "../utils/randomBetween";
 
 const extractSelectedLayerAction = atom(undefined, (get, set) => {
@@ -53,6 +54,7 @@ export const CoordControls = () => {
   return (
     <div>
       <button onClick={addLayer}>Add</button>
+      <button onClick={captureCanvas}>Download</button>
       <label>
         <input
           type="checkbox"

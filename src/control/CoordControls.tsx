@@ -20,8 +20,8 @@ const extractSelectedLayerAction = atom(undefined, (get, set) => {
 
 const addNewLayerAction = atom(undefined, (get, set) => {
   const parent = set(extractSelectedLayerAction);
-  const maxW = parent?.size.width ?? 300;
-  const maxH = parent?.size.height ?? 300;
+  const maxW = (parent?.size.width ?? 800) * 0.4;
+  const maxH = (parent?.size.height ?? 800) * 0.4;
   const maxX = parent ? parent.size.width * 0.7 : 400;
   const maxY = parent ? parent.size.height * 0.7 : 300;
 

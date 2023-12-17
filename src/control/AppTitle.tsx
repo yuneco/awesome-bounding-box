@@ -11,7 +11,7 @@ export const AppTitle = () => {
   return (
     <k.div
       position="relative"
-      display="flex"
+      display="grid"
       justifyContent="center"
       alignItems="center"
       height="100%"
@@ -19,6 +19,10 @@ export const AppTitle = () => {
       <k.h1 m={0} p={0} fontSize={24} color="#444">
         {party} Awesome Bounding Box {party}
       </k.h1>
+      <k.div display="flex" gap={8} justifyContent="center">
+        <k.a href="https://github.com/yuneco/awesome-bounding-box">GitHub</k.a>
+        <k.a href="https://twitter.com/yuneco">X</k.a>
+      </k.div>
     </k.div>
   );
 };

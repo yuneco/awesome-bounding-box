@@ -2,6 +2,7 @@ import { atom } from "jotai";
 
 import { Point } from "../../coord/Point";
 import { getBoundinfBoxHandleAt } from "../../layer/boundingBox/drawBoundingBox";
+import { drawOptionAtom } from "../drawOptionState";
 import { layerTreeAtom } from "../layerTreeState";
 import { pointerStateAtom } from "../pointerState";
 
@@ -15,5 +16,11 @@ export const findHandleAction = atom(undefined, (get, set, canvasP: Point) => {
     return undefined;
   }
   const root = get(layerTreeAtom);
-  return getBoundinfBoxHandleAt(canvasP, root, pointer.selectedLayer);
+  const options = get(drawOptionAtom);
+  return getBoundinfBoxHandleAt(
+    canvasP,
+    root,
+    pointer.selectedLayer,
+    options.boundingOptions
+  );
 });

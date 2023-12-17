@@ -1,3 +1,4 @@
+import { k } from "@kuma-ui/core";
 import { atom, useAtom, useSetAtom } from "jotai";
 
 import { findLayerById } from "../layer/findLayerById";
@@ -7,6 +8,8 @@ import { addLayerAction, layerTreeAtom } from "../state/layerTreeState";
 import { pointerStateAtom } from "../state/pointerState";
 import { captureCanvas } from "../utils/captureCanvas";
 import { randomBetween } from "../utils/randomBetween";
+
+import { BaseButton } from "./Button";
 
 const extractSelectedLayerAction = atom(undefined, (get, set) => {
   const pointer = get(pointerStateAtom);
@@ -52,17 +55,17 @@ export const CoordControls = () => {
   const [party, setParty] = useAtom(drawPartyAtom);
 
   return (
-    <div>
-      <button onClick={addLayer}>Add</button>
-      <button onClick={captureCanvas}>Download</button>
-      <label>
-        <input
+    <k.div display="flex" gap={8} p={8}>
+      <BaseButton onClick={addLayer}>Add Layer</BaseButton>
+      <BaseButton onClick={captureCanvas}>Download Canvas</BaseButton>
+      <k.label cursor="pointer">
+        <k.input
           type="checkbox"
           checked={party}
           onChange={(ev) => setParty(ev.currentTarget.checked)}
         />
         PARTY MODE
-      </label>
-    </div>
+      </k.label>
+    </k.div>
   );
 };

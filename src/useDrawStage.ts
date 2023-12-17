@@ -38,7 +38,12 @@ const useLayerImage = () => {
 export const useDrawStage = (ctx?: CanvasRenderingContext2D) => {
   const root = useAtomValue(layerTreeAtom);
   const options = useAtomValue(drawOptionAtom);
-  useAnimation(options.selectedId !== undefined);
+  const shouldAnimate =
+    // using party mode
+    options.boundingOptions?.kind === "party" &&
+    // bounding box is displayed
+    options.selectedId !== undefined;
+  useAnimation(shouldAnimate);
   useLayerImage();
 
   if (!ctx) return;

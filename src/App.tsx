@@ -1,6 +1,5 @@
 import { css } from "@kuma-ui/core";
 
-import "./App.css";
 import { CoordControls } from "./control/CoordControls";
 import { MainStage } from "./MainStage";
 

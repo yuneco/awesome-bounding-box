@@ -6,6 +6,8 @@ export type Layer = {
   readonly coord: Coord;
   readonly size: Size;
   readonly children: Layer[];
+  /** layer type. default is image */
+  type?: "stage" | "image";
   clip: boolean;
   color: string;
 };

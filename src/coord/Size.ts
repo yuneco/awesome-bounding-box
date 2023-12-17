@@ -14,3 +14,8 @@ export const pointToSize = (point: Point): Size => ({
   width: point.x,
   height: point.y,
 });
+
+export const scaleSize = (size: Size, scale: number): Size => ({
+  width: size.width * scale,
+  height: size.height * scale,
+});

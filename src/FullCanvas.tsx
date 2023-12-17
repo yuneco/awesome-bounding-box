@@ -11,7 +11,7 @@ const baseStyle = css`
   position: absolute;
   top: 0;
   left: 0;
-  outline: 1px solid #000;
+  border: 1px solid #000;
 `;
 
 const setCanavasSize = (canvas: HTMLCanvasElement, size: Size) => {

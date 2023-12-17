@@ -1,7 +1,10 @@
 import { atom } from "jotai";
 import { PointerEvent } from "react";
 
-import { RESIZE_HANDLE_NAMES } from "../../layer/boundingBox/boundingBoxLayout";
+import {
+  BoxElement,
+  RESIZE_HANDLE_NAMES,
+} from "../../layer/boundingBox/boundingBoxLayout";
 import { ev2point } from "../../utils/ev2point";
 import { pointerStateAtom, setPointerAction } from "../pointerState";
 
@@ -11,6 +14,18 @@ import { blurAction, focusAction } from "./focusAction";
 import { continueMoveAction, startMoveAction } from "./moveAction";
 import { continueResizeAction, startResizeAction } from "./resizeAction";
 import { continueRotateAction, startRotateAction } from "./rotateAction";
+
+const changeCursor = (handle?: BoxElement) => {
+  const cursors = {
+    "left-top": "crosshair",
+    "right-top": "crosshair",
+    "right-bottom": "crosshair",
+    "left-bottom": "crosshair",
+    rotate: "crosshair",
+    body: "move",
+  } as const satisfies { [key in BoxElement]: string };
+  document.body.style.cursor = handle ? cursors[handle] : "default";
+};
 
 const onMoveAction = atom(
   undefined,
@@ -22,8 +37,7 @@ const onMoveAction = atom(
     // just moving cursor
     if (!isDown) {
       const handle = set(findHandleAction, canvasP);
-      const onHandle = handle && handle !== "body";
-      document.body.style.cursor = onHandle ? "crosshair" : "default";
+      changeCursor(handle);
 
       set(focusAction, canvasP);
       return;

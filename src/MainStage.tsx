@@ -1,9 +1,10 @@
 import { css } from "@kuma-ui/core";
 import { useSetAtom } from "jotai";
-import { PointerEvent, useRef } from "react";
+import { PointerEvent, useEffect, useRef } from "react";
 
 import { DPR } from "./coord/DPR";
 import { useFullCanvas } from "./FullCanvas";
+import { centerStageAction } from "./state/pointerActions/centerStageAction";
 import { pointerActions } from "./state/pointerActions/defaultPointerActions";
 import { useDrawStage } from "./useDrawStage";
 import { createPointerThrottle } from "./utils/pointerThrottle";
@@ -27,6 +28,14 @@ export const MainStage = () => {
     if (!throttle.current(ev)) return;
     onMove(ev);
   };
+
+  const fitCenter = useSetAtom(centerStageAction);
+  const stageW = stage.size.width;
+  const stageH = stage.size.height;
+  useEffect(
+    () => fitCenter({ width: stageW, height: stageH }),
+    [stageW, stageH, fitCenter]
+  );
 
   useDrawStage(stage.ctx);
 

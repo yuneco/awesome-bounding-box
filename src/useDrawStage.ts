@@ -1,6 +1,7 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import { useEffect } from "react";
 
+import { drawBgCheck } from "./canvasUtils/drawBgCheck";
 import { wrapCtx } from "./canvasUtils/wrapCtx";
 import { drawLayer } from "./layer/drawLayer";
 import {
@@ -51,7 +52,7 @@ export const useDrawStage = (ctx?: CanvasRenderingContext2D) => {
   const draw = () => {
     wrapCtx(ctx, () => {
       ctx.resetTransform();
-      ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+      drawBgCheck(ctx);
       drawLayer(ctx, root, options);
     });
   };

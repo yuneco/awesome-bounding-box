@@ -22,7 +22,6 @@ export const findLayerAtAction = atom(
     const layer = findLayerAt(root, canvasPoint);
 
     if (!layer) return undefined;
-    if (layer.id === root.id) return undefined;
 
     const parentMatrix = getParentMatrix(root, layer.id);
     if (!parentMatrix) return undefined;

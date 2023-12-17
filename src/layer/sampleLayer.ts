@@ -2,13 +2,13 @@ import { createLayer } from "./Layer";
 
 export const sampleLayer = createLayer(
   {
+    type: "stage",
     coord: {
       position: { x: 0, y: 0 },
       scale: 1,
       angle: 0,
-      anchor: { x: 0, y: 0 },
     },
-    size: { width: 2000, height: 2000 },
+    size: { width: 1000, height: 800 },
     children: [
       createLayer(
         {
